@@ -5144,6 +5144,11 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!1 &944403324 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 165d4e24068a24d43b6fcda1517a4fe6, type: 3}
+  m_PrefabInstance: {fileID: 164333457}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &944403325 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 165d4e24068a24d43b6fcda1517a4fe6, type: 3}
@@ -6963,6 +6968,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cc: {fileID: 1961291884}
   anim: {fileID: 944403326}
+  model: {fileID: 944403324}
 --- !u!4 &1961291883
 Transform:
   m_ObjectHideFlags: 0

@@ -24,8 +24,8 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private Animator anim; // model's animator component
 
-    //[SerializeField] private GameObject model;          // a reference to the model (inside the Player gameObject)
-    //private float rotateToFaceMovementSpeed = 5f;       // the speed to rotate our model towards the movement vector
+    [SerializeField] private GameObject model;          // a reference to the model (inside the Player gameObject)
+    private float rotateToFaceMovementSpeed = 5f;       // the speed to rotate our model towards the movement vector
 
     //[SerializeField] private Camera cam;                // a reference to the main camera
     //private float rotateToFaceAwayFromCameraSpeed = 5f; // the speed to rotate our Player to align with the camera view.
@@ -69,33 +69,47 @@ public class PlayerMovement : MonoBehaviour
         // give upward y Velocity if we jumped
         if(Input.GetButtonDown("Jump") && jumpsAvailable > 0)
         {
+            anim.SetTrigger("jump"); // play jump animation
             yVelocity = initialJumpVelocity;
             jumpsAvailable--;
         }
+
+        // tell animator if we're grounded
+        anim.SetBool("isGrounded", cc.isGrounded);
+
         movement.y = yVelocity;
 
         movement *= Time.deltaTime; // make all movement processor independent
 
         // move the player  (using the character controller)
-        cc.Move(movement);  
+        cc.Move(movement);
 
-        // rotate the player
-        Vector3 rotation = Vector3.up * rotationSpeed * Time.deltaTime * Input.GetAxis("Mouse X");
-        transform.Rotate(rotation);
+        // rotate the player (commented out because now uses the function below
+        //Vector3 rotation = Vector3.up * rotationSpeed * Time.deltaTime * Input.GetAxis("Mouse X");
+        //transform.Rotate(rotation);
+
+        // convert from local to global coordinates
+        movement = transform.TransformDirection(movement);
+
+        // Rotate model to face movement direction (if movement exists)
+        if (movement.magnitude > 0)
+        {
+            RotateModelToFaceMovement(movement);
+        }
     }
 
 
     // Set the rotation of the model to match the direction of the movement vector
     private void RotateModelToFaceMovement(Vector3 moveDirection)
     {
-        // Determine the rotation needed to face the direction of movement (only XZ movement - ignore Y)
-        //Quaternion newRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
+        // Determine the rotation needed to face the direction of movement(only XZ movement -ignore Y)
+        Quaternion newRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
 
         // set the model's rotation
         //model.transform.rotation = newRotation;
 
         // replace the above line with this one to enable smoothing
-        //model.transform.rotation = Quaternion.Slerp(model.transform.rotation, newRotation, rotateToFaceMovementSpeed * Time.deltaTime);
+        model.transform.rotation = Quaternion.Slerp(model.transform.rotation, newRotation, rotateToFaceMovementSpeed * Time.deltaTime);
     }
 
     // set the player's Y rotation (yaw) to be aligned with the camera's Y rotation
