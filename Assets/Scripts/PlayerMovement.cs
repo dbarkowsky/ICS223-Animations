@@ -22,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
     private float jumpsAvailable = 0;
     private float jumpsMax = 2;
 
+    [SerializeField] private Animator anim; // model's animator component
+
     //[SerializeField] private GameObject model;          // a reference to the model (inside the Player gameObject)
     //private float rotateToFaceMovementSpeed = 5f;       // the speed to rotate our model towards the movement vector
 
@@ -46,6 +48,9 @@ public class PlayerMovement : MonoBehaviour
 
         // ensure diagonal movement doesn't exceed horiz/vert movement speed
         movement = Vector3.ClampMagnitude(movement, 1.0f);
+
+        // set animator's velocity parameter based on XZ movement
+        anim.SetFloat("velocity", movement.magnitude);
 
         // convert from local to global coordinates
         movement = transform.TransformDirection(movement);
