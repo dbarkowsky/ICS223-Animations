@@ -54,6 +54,15 @@ public class PlayerMovement : MonoBehaviour
 
         // convert from local to global coordinates
         movement = transform.TransformDirection(movement);
+        
+
+        // Rotate model to face movement direction (if movement exists)
+        if (movement.magnitude > 0)
+        {
+            RotateModelToFaceMovement(movement);
+            RotatePlayerToFaceAwayFromCamera();
+        }
+
         movement *= speed;
 
         // calculate yVelocity and add it to the player's movement vector
@@ -98,18 +107,14 @@ public class PlayerMovement : MonoBehaviour
         // convert from local to global coordinates
         //movement = transform.TransformDirection(movement); // Can't do this when using camera with direction of movement
 
-        // Rotate model to face movement direction (if movement exists)
-        if (movement.magnitude > 0)
-        {
-            RotateModelToFaceMovement(movement);
-            RotatePlayerToFaceAwayFromCamera();
-        }
+        
     }
 
 
     // Set the rotation of the model to match the direction of the movement vector
     private void RotateModelToFaceMovement(Vector3 moveDirection)
     {
+        Debug.Log("here");
         // Determine the rotation needed to face the direction of movement(only XZ movement -ignore Y)
         Quaternion newRotation = Quaternion.LookRotation(new Vector3(moveDirection.x, 0f, moveDirection.z));
 
